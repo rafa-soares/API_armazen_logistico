@@ -104,6 +104,7 @@ A aplicação **está seguindo Arquitetura Hexagonal e Clean Architecture** com:
 ## 📊 Esquema Visual da Arquitetura
 
 Um dos princípios fundamentais da Clean Architecture é a **Regra de Dependência**: as dependências apontam sempre para dentro, em direção ao núcleo.
+```
                🧑‍💻 Mundo Externo
                         │
                         ▼
@@ -139,3 +140,5 @@ Um dos princípios fundamentais da Clean Architecture é a **Regra de Dependênc
 ║ 🔌 Adaptadores de Saída (Driven):             ║
 ║   • InboundGatewayImp → Repository → DB       ║
 ╚═══════════════════════════════════════════════╝
+
+```
