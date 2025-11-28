@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class InboundDomain {
     private Long id;
 
-//    @NotBlank(message = "O atributo seller não pode ser null ou empty.")
+    @NotBlank(message = "O atributo seller não pode ser null ou empty.")
     private String seller;
 
     private String code;
