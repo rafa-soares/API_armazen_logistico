@@ -1,4 +1,4 @@
-package com.wms.receiving.entrypoint.dtos;
+package com.wms.receiving.entrypoint.controller.dtos;
 
 import com.wms.receiving.infra.model.Status;
 import lombok.Data;
@@ -13,5 +13,5 @@ public class ItemResponseDTO {
 
     private Integer qty;
 
-    private Status status;
+    private Status statusChecking;
 }

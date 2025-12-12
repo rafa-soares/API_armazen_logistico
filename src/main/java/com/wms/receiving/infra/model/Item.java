@@ -19,14 +19,13 @@ public class Item {
     @NotNull
     private String description;
 
-//    @NotNull
     private String sku;
 
     @NotNull
     private Integer qty;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.OPEN;
+    private Status statusChecking = Status.OPEN;
 
 //    @NotNull
     @ManyToOne
@@ -39,7 +38,7 @@ public class Item {
         itemDomain.setDescription(item.getDescription());
         itemDomain.setSku(item.getSku());
         itemDomain.setQty(item.getQty());
-        itemDomain.setStatus(item.getStatus());
+        itemDomain.setStatusChecking(item.getStatusChecking());
         return itemDomain;
     }
 

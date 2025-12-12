@@ -1,7 +1,6 @@
-package com.wms.receiving.entrypoint.dtos;
+package com.wms.receiving.entrypoint.controller.dtos;
 
 import com.wms.receiving.core.domain.ItemDomain;
-import com.wms.receiving.infra.model.Status;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

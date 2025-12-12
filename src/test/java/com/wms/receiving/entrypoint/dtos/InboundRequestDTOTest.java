@@ -1,7 +1,8 @@
 package com.wms.receiving.entrypoint.dtos;
 
 import com.wms.receiving.core.domain.InboundDomain;
-import com.wms.receiving.infra.model.Status;
+import com.wms.receiving.entrypoint.controller.dtos.InboundRequestDTO;
+import com.wms.receiving.entrypoint.controller.dtos.ItemRequestDTO;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.wms.receiving.entrypoint.handler;
 
+import com.wms.receiving.entrypoint.exceptions.InboundNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,24 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(InboundNotFoundException.class)
+    public ResponseEntity<ErrorResponse> inboundNotFound(
+            final InboundNotFoundException exception,
+            final HttpServletRequest request) {
+
+        String message = exception.getMessage();
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
+        errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        errorResponse.setMessage(message);
+        errorResponse.setPath(request.getRequestURI());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
     }
 }

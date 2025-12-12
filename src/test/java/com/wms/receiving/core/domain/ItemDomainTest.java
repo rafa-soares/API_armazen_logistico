@@ -1,6 +1,6 @@
 package com.wms.receiving.core.domain;
 
-import com.wms.receiving.entrypoint.dtos.ItemResponseDTO;
+import com.wms.receiving.entrypoint.controller.dtos.ItemResponseDTO;
 import com.wms.receiving.infra.model.Item;
 import com.wms.receiving.infra.model.Status;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ class ItemDomainTest {
         itemDomain = ItemDomain.builder()
                 .description("Teste")
                 .qty(1)
-                .status(Status.OPEN)
+                .statusChecking(Status.OPEN)
                 .build();
     }
 
@@ -29,7 +29,7 @@ class ItemDomainTest {
 
         assertThat(item.getDescription()).isEqualTo("Teste");
         assertThat(item.getQty()).isEqualTo(1);
-        assertThat(item.getStatus()).isEqualTo(Status.OPEN);
+        assertThat(item.getStatusChecking()).isEqualTo(Status.OPEN);
     }
 
     @Test
@@ -38,6 +38,6 @@ class ItemDomainTest {
 
         assertThat(itemResponseDTO.getDescription()).isEqualTo("Teste");
         assertThat(itemResponseDTO.getQty()).isEqualTo(1);
-        assertThat(itemResponseDTO.getStatus()).isEqualTo(Status.OPEN);
+        assertThat(itemResponseDTO.getStatusChecking()).isEqualTo(Status.OPEN);
     }
 }

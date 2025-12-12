@@ -2,10 +2,10 @@ package com.wms.receiving.core.usecase;
 
 import com.wms.receiving.core.domain.InboundDomain;
 import com.wms.receiving.core.domain.ItemDomain;
-import com.wms.receiving.core.gateway.InboundGateway;
-import com.wms.receiving.entrypoint.dtos.InboundRequestDTO;
-import com.wms.receiving.entrypoint.dtos.InboundResponseDTO;
-import com.wms.receiving.entrypoint.dtos.ItemRequestDTO;
+import com.wms.receiving.core.gateway.AppointmentGateway;
+import com.wms.receiving.entrypoint.controller.dtos.InboundRequestDTO;
+import com.wms.receiving.entrypoint.controller.dtos.InboundResponseDTO;
+import com.wms.receiving.entrypoint.controller.dtos.ItemRequestDTO;
 import com.wms.receiving.infra.model.Status;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CreateInboundTest {
     @Mock
-    private InboundGateway inboundGateway;
+    private AppointmentGateway appointmentGateway;
 
     @InjectMocks
     private CreateInbound createInbound;
@@ -41,21 +41,21 @@ class CreateInboundTest {
         final ItemDomain itemDomain = ItemDomain.builder()
                 .description("Iphone")
                 .qty(1)
-                .status(Status.OPEN)
+                .statusChecking(Status.OPEN)
                 .build();
 
         final InboundDomain inboundDomain = InboundDomain.builder()
                 .seller("Rafaela")
-                .status(Status.OPEN)
+                .statusChecking(Status.OPEN)
                 .items(List.of(itemDomain))
                 .build();
 
-        when(inboundGateway.saveInbound(any(InboundDomain.class))).thenReturn(inboundDomain);
+        when(appointmentGateway.saveInbound(any(InboundDomain.class))).thenReturn(inboundDomain);
 
         final InboundResponseDTO inboundResponse = createInbound.execute(inboundRequestDTO);
 
-        assertEquals(inboundDomain.getStatus(), inboundResponse.getStatus());
+        assertEquals(inboundDomain.getStatusChecking(), inboundResponse.getStatusChecking());
         assertEquals(itemDomain.getDescription(), itemRequest.getDescription());
-        verify(inboundGateway, times(1)).saveInbound(any(InboundDomain.class));
+        verify(appointmentGateway, times(1)).saveInbound(any(InboundDomain.class));
     }
 }

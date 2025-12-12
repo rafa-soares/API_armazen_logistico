@@ -3,7 +3,6 @@ package com.wms.receiving.infra.model;
 import com.wms.receiving.core.domain.InboundDomain;
 import com.wms.receiving.core.domain.ItemDomain;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +25,12 @@ public class Inbound {
     private String code;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.OPEN;
+    private Status statusReceiving = Status.PENDING;
 
-    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Status statusChecking = Status.OPEN;
+
+//    @NotNull
     @OneToMany(mappedBy = "inbound", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Item> items;
 
@@ -62,7 +64,8 @@ public class Inbound {
         inboundDomain.setId(inbound.getId());
         inboundDomain.setSeller(inbound.getSeller());
         inboundDomain.setCode(inbound.getCode());
-        inboundDomain.setStatus(inbound.getStatus());
+        inboundDomain.setStatusReceiving(inbound.statusReceiving);
+        inboundDomain.setStatusChecking(inbound.getStatusChecking());
 
         final List<ItemDomain> items = inbound.getItems().stream()
                 .map(Item::toDomain)

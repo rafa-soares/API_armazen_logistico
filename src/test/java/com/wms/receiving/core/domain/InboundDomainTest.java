@@ -1,6 +1,6 @@
 package com.wms.receiving.core.domain;
 
-import com.wms.receiving.entrypoint.dtos.InboundResponseDTO;
+import com.wms.receiving.entrypoint.controller.dtos.InboundResponseDTO;
 import com.wms.receiving.infra.model.Inbound;
 import com.wms.receiving.infra.model.Status;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +24,13 @@ class InboundDomainTest {
         itemDomain = ItemDomain.builder()
                 .description("Teste")
                 .qty(1)
-                .status(Status.OPEN)
+                .statusChecking(Status.OPEN)
                 .build();
 
         inboundDomain = InboundDomain.builder()
                 .code("123")
                 .seller("Teste")
-                .status(Status.OPEN)
+                .statusChecking(Status.OPEN)
                 .items(List.of(itemDomain))
                 .build();
     }
@@ -40,14 +40,14 @@ class InboundDomainTest {
         final Inbound inbound = InboundDomain.toInbound(inboundDomain);
 
         assertThat(inbound.getSeller()).isEqualTo("Teste");
-        assertThat(inbound.getStatus()).isEqualTo(Status.OPEN);
+        assertThat(inbound.getStatusChecking()).isEqualTo(Status.OPEN);
     }
 
     @Test
     void shouldConvertInboundDomainToInboundResponse() {
         final InboundResponseDTO inboundResponse = InboundDomain.toResponse(inboundDomain);
 
-        assertThat(inboundResponse.getStatus()).isEqualTo(Status.OPEN);
+        assertThat(inboundResponse.getStatusChecking()).isEqualTo(Status.OPEN);
         assertThat(inboundResponse.getCode()).isEqualTo("123");
         assertTrue(inboundResponse.getItems().stream()
                         .allMatch(itemResponseDTO -> itemResponseDTO.getDescription().equals("Teste")),

@@ -1,4 +1,4 @@
-package com.wms.receiving.entrypoint.dtos;
+package com.wms.receiving.entrypoint.controller.dtos;
 
 import com.wms.receiving.core.domain.InboundDomain;
 import com.wms.receiving.core.domain.ItemDomain;
