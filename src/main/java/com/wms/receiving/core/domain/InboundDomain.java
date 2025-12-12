@@ -1,7 +1,7 @@
 package com.wms.receiving.core.domain;
 
-import com.wms.receiving.entrypoint.dtos.InboundResponseDTO;
-import com.wms.receiving.entrypoint.dtos.ItemResponseDTO;
+import com.wms.receiving.entrypoint.controller.dtos.InboundResponseDTO;
+import com.wms.receiving.entrypoint.controller.dtos.ItemResponseDTO;
 import com.wms.receiving.infra.model.Inbound;
 import com.wms.receiving.infra.model.Item;
 import com.wms.receiving.infra.model.Status;
@@ -23,7 +23,9 @@ public class InboundDomain {
 
     private String code;
 
-    private Status status;
+    private Status statusReceiving;
+
+    private Status statusChecking;
 
     private List<ItemDomain> items;
 
@@ -49,7 +51,8 @@ public class InboundDomain {
     public static InboundResponseDTO toResponse(final InboundDomain inboundDomain) {
         final InboundResponseDTO inboundResponseDTO = new InboundResponseDTO();
         inboundResponseDTO.setId(inboundDomain.getId());
-        inboundResponseDTO.setStatus(inboundDomain.getStatus());
+        inboundResponseDTO.setStatusReceiving(inboundDomain.getStatusReceiving());
+        inboundResponseDTO.setStatusChecking(inboundDomain.getStatusChecking());
         inboundResponseDTO.setCode(inboundDomain.getCode());
 
         final List<ItemResponseDTO> items = inboundDomain.getItems().stream()

@@ -4,9 +4,10 @@ import com.wms.receiving.core.usecase.CreateInbound;
 import com.wms.receiving.core.usecase.FindAllScheduledInbounds;
 import com.wms.receiving.core.usecase.FindFirstInbound;
 import com.wms.receiving.core.usecase.FindInboundByCode;
-import com.wms.receiving.entrypoint.dtos.InboundRequestDTO;
-import com.wms.receiving.entrypoint.dtos.InboundResponseDTO;
-import com.wms.receiving.entrypoint.dtos.ItemRequestDTO;
+import com.wms.receiving.entrypoint.controller.dtos.InboundRequestDTO;
+import com.wms.receiving.entrypoint.controller.dtos.InboundResponseDTO;
+import com.wms.receiving.entrypoint.controller.dtos.ItemRequestDTO;
+import com.wms.receiving.entrypoint.handler.ErrorResponse;
 import com.wms.receiving.infra.repository.InboundRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.verify;
 @TestInstance(PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class InboundControllerTest {
+class AppointmentControllerTest {
     @Autowired
     private InboundRepository inboundRepository;
 
@@ -68,36 +69,47 @@ class InboundControllerTest {
                 .build();
 
         ResponseEntity<InboundResponseDTO> response =
-                template.postForEntity("/inbound", inboundRequest, InboundResponseDTO.class);
+                template.postForEntity("/appointment/inbound", inboundRequest, InboundResponseDTO.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(createInbound, times(1)).execute(any(InboundRequestDTO.class));
     }
 
     @Test
-    public void shouldFindAllScheduledInbounds() {
-        ResponseEntity<List<InboundResponseDTO>> response =
-                template.getForEntity("/inbound/all", null, List.of(InboundResponseDTO.class));
+    public void shouldReturnBadRequestWhenSellerIsNull() {
+        final ItemRequestDTO itemRequest = ItemRequestDTO.builder()
+                .description("Macbook")
+                .sku("123")
+                .qty(3)
+                .build();
+        final InboundRequestDTO inboundRequest = InboundRequestDTO.builder()
+                .seller(null)
+                .items(List.of(itemRequest))
+                .build();
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(findAllScheduledInbounds, times(1)).execute();
+        ResponseEntity<ErrorResponse> response =
+                template.postForEntity("/appointment/inbound", inboundRequest, ErrorResponse.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        verify(createInbound, times(0)).execute(any(InboundRequestDTO.class));
     }
 
     @Test
-    public void shouldGetFindFirstInbound() {
-        ResponseEntity<InboundResponseDTO> response =
-                template.getForEntity("/inbound/first", null, InboundResponseDTO.class);
+    public void shouldReturnBadRequestWhenSellerIsEmpty() {
+        final ItemRequestDTO itemRequest = ItemRequestDTO.builder()
+                .description("Macbook")
+                .sku("123")
+                .qty(3)
+                .build();
+        final InboundRequestDTO inboundRequest = InboundRequestDTO.builder()
+                .seller(" ")
+                .items(List.of(itemRequest))
+                .build();
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(findFirstInbound, times(1)).execute();
-    }
+        ResponseEntity<ErrorResponse> response =
+                template.postForEntity("/appointment/inbound", inboundRequest, ErrorResponse.class);
 
-    @Test
-    public void shouldGetFindInboundIdByCode() {
-        ResponseEntity<InboundResponseDTO> response =
-                template.getForEntity("/inbound/{code}", InboundResponseDTO.class, "1234");
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(findInboundByCode, times(1)).execute("1234");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        verify(createInbound, times(0)).execute(any(InboundRequestDTO.class));
     }
 }

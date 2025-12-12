@@ -4,12 +4,12 @@ import com.wms.receiving.core.domain.InboundDomain;
 
 import java.util.List;
 
-public interface InboundGateway {
-    InboundDomain saveInbound(InboundDomain inboundDomain);
-
+public interface ReceivingGateway {
     List<InboundDomain> findAllInbounds();
 
     InboundDomain findFirstInbound();
 
-    InboundDomain findInboundByCode(String code);
+    InboundDomain findInboundByCode(final String code);
+
+    InboundDomain updateStatusInbound(final Long inboundId);
 }

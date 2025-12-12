@@ -1,7 +1,6 @@
-package com.wms.receiving.entrypoint.dtos;
+package com.wms.receiving.entrypoint.controller.dtos;
 
 import com.wms.receiving.infra.model.Status;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +9,9 @@ import java.util.List;
 public class InboundResponseDTO {
     private Long id;
 
-    private Status status;
+    private Status statusReceiving;
+
+    private Status statusChecking;
 
     private String code;
 

@@ -1,7 +1,7 @@
 package com.wms.receiving.entrypoint.dtos;
 
 import com.wms.receiving.core.domain.ItemDomain;
-import com.wms.receiving.infra.model.Status;
+import com.wms.receiving.entrypoint.controller.dtos.ItemRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
