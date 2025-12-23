@@ -1,0 +1,79 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: 123456
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.0
+    container_name: logstash
+    restart: always
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOST: "http://elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+
+  h2-database:
+    image: thomseno/h2
+    container_name: h2_database_service
+    ports:
+      - "8082:8082"   # Console Web H2
+      - "9092:9092"   # Porta TCP para conexão JDBC remota
+    volumes:
+      - h2_data:/data
+
+  wms-receiving:
+    build: .
+    image: wms-receiving:latest
+    container_name: wms-receiving
+    ports:
+      - "8081:8080"
+    depends_on:
+      - rabbitmq
+      - logstash
+      - h2-database
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_RABBITMQ_HOST: rabbitmq
+
+volumes:
+  rabbitmq_data:
+  elasticsearch_data:
+  h2_data:

@@ -1,5 +1,6 @@
 package com.wms.receiving.entrypoint.consumer;
 
+import com.wms.receiving.infra.config.RabbitMQConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.Message;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CheckingConsumer {
 
-    @RabbitListener(queues = "receiving.queue")
+    @RabbitListener(queues = RabbitMQConfig.QUEUE)
     public void consumer(@Payload Message message) {
         log.info("CheckingConsumer received status: {}", message);
     }

@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: sa
+    password: ""
+    url: jdbc:h2:mem:receivingdb
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
