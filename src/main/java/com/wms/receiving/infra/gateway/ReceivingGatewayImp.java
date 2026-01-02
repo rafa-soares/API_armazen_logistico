@@ -4,6 +4,7 @@ import com.wms.receiving.core.domain.InboundDomain;
 import com.wms.receiving.core.gateway.ReceivingGateway;
 import com.wms.receiving.entrypoint.exceptions.ExceptionMessage;
 import com.wms.receiving.entrypoint.exceptions.InboundNotFoundException;
+import com.wms.receiving.infra.mapper.modelToDomain.InboundToInboundDomainConverter;
 import com.wms.receiving.infra.model.Inbound;
 import com.wms.receiving.infra.model.Status;
 import com.wms.receiving.infra.repository.InboundRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 @Component
 public class ReceivingGatewayImp implements ReceivingGateway {
     private final InboundRepository inboundRepository;
+    private final InboundToInboundDomainConverter inboundConverter;
 
     @Override
     public InboundDomain findFirstInbound() {
@@ -25,21 +27,21 @@ public class ReceivingGatewayImp implements ReceivingGateway {
                 .findFirst()
                 .orElseThrow();
         log.info("[findFirstInbound] First inbound to be received. {}", inbound);
-        return Inbound.toDomain(inbound);
+        return inboundConverter.toDomain(inbound);
     }
 
     @Override
     public InboundDomain findInboundByCode(final String code) {
         final Inbound inbound = inboundRepository.findInboundByCode(code);
         log.info("[findInboundByCode] Get inboundId by code={}", code);
-        return Inbound.toDomain(inbound);
+        return inboundConverter.toDomain(inbound);
     }
 
     @Override
     public List<InboundDomain> findAllInbounds() {
         final List<Inbound> inbounds = inboundRepository.findAll();
         log.info("[findAllInbounds] List of all inbounds to be received. {}", inbounds);
-        return Inbound.toDomain(inbounds);
+        return inboundConverter.toDomain(inbounds);
     }
 
     @Override
@@ -49,6 +51,6 @@ public class ReceivingGatewayImp implements ReceivingGateway {
 
         inbound.setStatusReceiving(Status.RECEIVED);
 
-        return Inbound.toDomain(inboundRepository.save(inbound));
+        return inboundConverter.toDomain(inboundRepository.save(inbound));
     }
 }

@@ -22,16 +22,4 @@ public class InboundRequestDTO {
 
     @NotEmpty(message = "Os items não podem ser null ou empty.")
     private List<ItemRequestDTO> items;
-
-    public static InboundDomain toDomain(final InboundRequestDTO inboundRequestDTO) {
-        final InboundDomain inboundDomain = new InboundDomain();
-        inboundDomain.setSeller(inboundRequestDTO.getSeller());
-
-        final List<ItemDomain> items = inboundRequestDTO.getItems().stream()
-                .map(item -> ItemRequestDTO.toDomain(item))
-                .collect(Collectors.toList());
-        inboundDomain.setItems(items);
-
-        return inboundDomain;
-    }
 }

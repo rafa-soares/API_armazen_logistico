@@ -1,23 +1,36 @@
-package com.wms.receiving.core.domain;
+package com.wms.receiving.entrypoint.mapper.domainToResponse;
 
+import com.wms.receiving.core.domain.InboundDomain;
+import com.wms.receiving.core.domain.ItemDomain;
 import com.wms.receiving.entrypoint.controller.dtos.InboundResponseDTO;
-import com.wms.receiving.infra.model.Inbound;
+import com.wms.receiving.entrypoint.controller.dtos.ItemResponseDTO;
 import com.wms.receiving.infra.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class InboundDomainTest {
+class InboundDomainToInboundResponseConverterImplTest {
+    @InjectMocks
+    private InboundDomainToInboundResponseConverterImpl inboundConverter;
+
+    @Mock
+    private ItemDomainToItemResponseConverterImpl itemConverter;
+
     private ItemDomain itemDomain;
 
     private InboundDomain inboundDomain;
+
+    private ItemResponseDTO itemResponse = new ItemResponseDTO();
 
     @BeforeEach
     void setUp() {
@@ -33,19 +46,17 @@ class InboundDomainTest {
                 .statusChecking(Status.OPEN)
                 .items(List.of(itemDomain))
                 .build();
-    }
 
-    @Test
-    void shouldConvertInboundDomainToInbound() {
-        final Inbound inbound = InboundDomain.toInbound(inboundDomain);
-
-        assertThat(inbound.getSeller()).isEqualTo("Teste");
-        assertThat(inbound.getStatusChecking()).isEqualTo(Status.OPEN);
+        itemResponse.setDescription("Teste");
+        itemResponse.setQty(1);
+        itemResponse.setStatusChecking(Status.OPEN);
     }
 
     @Test
     void shouldConvertInboundDomainToInboundResponse() {
-        final InboundResponseDTO inboundResponse = InboundDomain.toResponse(inboundDomain);
+        when(itemConverter.toResponse(itemDomain)).thenReturn(itemResponse);
+
+        final InboundResponseDTO inboundResponse = inboundConverter.toResponse(inboundDomain);
 
         assertThat(inboundResponse.getStatusChecking()).isEqualTo(Status.OPEN);
         assertThat(inboundResponse.getCode()).isEqualTo("123");
@@ -56,7 +67,9 @@ class InboundDomainTest {
 
     @Test
     void shouldConverterInboundDomainListToInboundResponseList() {
-        final List<InboundResponseDTO> inboundsResponse = InboundDomain.toResponse(List.of(inboundDomain));
+        when(itemConverter.toResponse(itemDomain)).thenReturn(itemResponse);
+
+        final List<InboundResponseDTO> inboundsResponse = inboundConverter.toResponse(List.of(inboundDomain));
 
         assertTrue(inboundsResponse.stream()
                         .allMatch(inboundsResponseDTO -> inboundsResponseDTO.getCode().equals("123")),

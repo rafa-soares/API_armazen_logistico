@@ -28,44 +28,4 @@ public class InboundDomain {
     private Status statusChecking;
 
     private List<ItemDomain> items;
-
-    public static Inbound toInbound(final InboundDomain inboundDomain) {
-        final Inbound inbound = new Inbound();
-        inbound.setId();
-        inbound.setSeller(inboundDomain.getSeller());
-        inbound.setCode();
-
-        final List<Item> items = inboundDomain.getItems().stream()
-                .map(item -> {
-                    final Item itemEntity = ItemDomain.toItem(item);
-                    itemEntity.setInbound(inbound);
-                    return itemEntity;
-                })
-                .collect(Collectors.toList());
-
-        inbound.setItems(items);
-
-        return inbound;
-    }
-
-    public static InboundResponseDTO toResponse(final InboundDomain inboundDomain) {
-        final InboundResponseDTO inboundResponseDTO = new InboundResponseDTO();
-        inboundResponseDTO.setId(inboundDomain.getId());
-        inboundResponseDTO.setStatusReceiving(inboundDomain.getStatusReceiving());
-        inboundResponseDTO.setStatusChecking(inboundDomain.getStatusChecking());
-        inboundResponseDTO.setCode(inboundDomain.getCode());
-
-        final List<ItemResponseDTO> items = inboundDomain.getItems().stream()
-                .map(item -> ItemDomain.toResponse(item))
-                .collect(Collectors.toList());
-        inboundResponseDTO.setItems(items);
-
-        return inboundResponseDTO;
-    }
-
-    public static List<InboundResponseDTO> toResponse(final List<InboundDomain> inboundsDomain) {
-        return inboundsDomain.stream()
-                .map(inboundDomain -> InboundDomain.toResponse(inboundDomain))
-                .collect(Collectors.toList());
-    }
 }

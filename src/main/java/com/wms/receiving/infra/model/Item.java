@@ -1,6 +1,5 @@
 package com.wms.receiving.infra.model;
 
-import com.wms.receiving.core.domain.ItemDomain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -27,20 +26,10 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Status statusChecking = Status.OPEN;
 
-//    @NotNull
+    //    @NotNull
     @ManyToOne
     @JoinColumn(name = "inbound_id")
     private Inbound inbound;
-
-    public static ItemDomain toDomain(final Item item) {
-        final ItemDomain itemDomain = new ItemDomain();
-        itemDomain.setId(item.getId());
-        itemDomain.setDescription(item.getDescription());
-        itemDomain.setSku(item.getSku());
-        itemDomain.setQty(item.getQty());
-        itemDomain.setStatusChecking(item.getStatusChecking());
-        return itemDomain;
-    }
 
     public void setId() {
         this.id = generateRandomId();

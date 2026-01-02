@@ -2,6 +2,8 @@ package com.wms.receiving.infra.gateway;
 
 import com.wms.receiving.core.domain.InboundDomain;
 import com.wms.receiving.core.domain.ItemDomain;
+import com.wms.receiving.infra.mapper.domainToModel.InboundDomainToInboundConverter;
+import com.wms.receiving.infra.mapper.modelToDomain.InboundToInboundDomainConverter;
 import com.wms.receiving.infra.model.Inbound;
 import com.wms.receiving.infra.model.Item;
 import com.wms.receiving.infra.model.Status;
@@ -25,6 +27,13 @@ class AppointmentGatewayImpTest {
 
     @InjectMocks
     private AppointmentGatewayImp inboundGatewayImp;
+
+    @Mock
+    private InboundDomainToInboundConverter inboundDomainConverter;
+
+    @Mock
+    private InboundToInboundDomainConverter inboundConverter;
+
 
     private Inbound inbound;
 
@@ -56,16 +65,15 @@ class AppointmentGatewayImpTest {
         inboundDomain = InboundDomain.builder()
                 .seller("Nathália")
                 .statusChecking(Status.OPEN)
-                .items(List.of(ItemDomain.builder()
-                        .description("Carro")
-                        .qty(1)
-                        .statusChecking(Status.OPEN)
-                        .build()))
+                .code("IS_73_09_76_39")
+                .items(List.of(itemDomain))
                 .build();
     }
 
     @Test
     public void shouldCreateInbound() {
+        when(inboundDomainConverter.toInbound(inboundDomain)).thenReturn(inbound);
+        when(inboundConverter.toDomain(inbound)).thenReturn(inboundDomain);
         when(inboundRepository.save(any(Inbound.class))).thenReturn(inbound);
 
         final InboundDomain inboundResponse = inboundGatewayImp.saveInbound(inboundDomain);

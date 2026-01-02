@@ -4,8 +4,10 @@ import com.wms.receiving.core.domain.InboundDomain;
 import com.wms.receiving.core.domain.ItemDomain;
 import com.wms.receiving.entrypoint.controller.dtos.InboundResponseDTO;
 import com.wms.receiving.entrypoint.controller.dtos.ItemResponseDTO;
+import com.wms.receiving.entrypoint.mapper.domainToResponse.InboundDomainToInboundResponseConverter;
 import com.wms.receiving.infra.gateway.ReceivingGatewayImp;
 import com.wms.receiving.infra.model.Status;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,28 +24,48 @@ class FindAllScheduledInboundsTest {
     @Mock
     private ReceivingGatewayImp receivingGatewayImp;
 
+    @Mock
+    private InboundDomainToInboundResponseConverter inboundDomainConverter;
+
     @InjectMocks
     private FindAllScheduledInbounds findAllScheduledInbounds;
 
-    @Test
-    public void shouldFindAllScheduledInbounds() {
-        final ItemResponseDTO itemResponse = new ItemResponseDTO();
-        itemResponse.setDescription("Iphone");
-        itemResponse.setQty(1);
-        itemResponse.setStatusChecking(Status.OPEN);
+    private ItemDomain itemDomain;
 
-        final ItemDomain itemDomain = ItemDomain.builder()
+    private InboundDomain inboundDomain;
+
+    private InboundResponseDTO inboundResponse = new InboundResponseDTO();
+
+    private ItemResponseDTO itemResponse = new ItemResponseDTO();
+
+    @BeforeEach
+    void setUp() {
+        itemDomain = ItemDomain.builder()
                 .description("Iphone")
                 .qty(1)
                 .statusChecking(Status.OPEN)
                 .build();
 
-        final InboundDomain inboundDomain = InboundDomain.builder()
+        inboundDomain = InboundDomain.builder()
                 .seller("Rafaela")
                 .statusChecking(Status.OPEN)
+                .code("IS_73_09_76_39")
                 .items(List.of(itemDomain))
                 .build();
 
+        itemResponse.setDescription("Iphone");
+        itemResponse.setQty(1);
+        itemResponse.setStatusChecking(Status.OPEN);
+
+        inboundResponse.setStatusReceiving(Status.PENDING);
+        inboundResponse.setStatusChecking(Status.OPEN);
+        inboundResponse.setCode("IS_73_09_76_39");
+        inboundResponse.setItems(List.of(itemResponse));
+    }
+
+    @Test
+    public void shouldFindAllScheduledInbounds() {
+        when(inboundDomainConverter.toResponse(List.of(inboundDomain))).thenReturn(List.of(inboundResponse));
         when(receivingGatewayImp.findAllInbounds()).thenReturn(List.of(inboundDomain));
 
         List<InboundResponseDTO> inboundResponse = findAllScheduledInbounds.execute();
