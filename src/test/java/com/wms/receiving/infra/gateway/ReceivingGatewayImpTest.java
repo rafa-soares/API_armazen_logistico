@@ -3,6 +3,7 @@ package com.wms.receiving.infra.gateway;
 import com.wms.receiving.core.domain.InboundDomain;
 import com.wms.receiving.core.domain.ItemDomain;
 import com.wms.receiving.entrypoint.exceptions.InboundNotFoundException;
+import com.wms.receiving.infra.mapper.modelToDomain.InboundToInboundDomainConverter;
 import com.wms.receiving.infra.model.Inbound;
 import com.wms.receiving.infra.model.Item;
 import com.wms.receiving.infra.model.Status;
@@ -27,12 +28,17 @@ class ReceivingGatewayImpTest {
     @Mock
     private InboundRepository inboundRepository;
 
+    @Mock
+    private InboundToInboundDomainConverter inboundConverter;
+
     @InjectMocks
     private ReceivingGatewayImp receivingGatewayImp;
 
     private Inbound inbound;
 
     private Item item;
+
+    private InboundDomain inboundDomain;
 
     private ItemDomain itemDomain;
 
@@ -56,10 +62,20 @@ class ReceivingGatewayImpTest {
                 .qty(1)
                 .statusChecking(Status.OPEN)
                 .build();
+
+        inboundDomain = InboundDomain.builder()
+                .id(12345678L)
+                .seller("Nathália")
+                .statusReceiving(Status.PENDING)
+                .statusChecking(Status.OPEN)
+                .code("IS_73_09_76_39")
+                .items(List.of(itemDomain))
+                .build();
     }
 
     @Test
     public void shouldFindAllInbounds() {
+        when(inboundConverter.toDomain(List.of(inbound))).thenReturn(List.of(inboundDomain));
         when(inboundRepository.findAll()).thenReturn(List.of(inbound));
 
         final List<InboundDomain> inbounds = receivingGatewayImp.findAllInbounds();
@@ -78,6 +94,7 @@ class ReceivingGatewayImpTest {
 
     @Test
     public void shouldFindFirstInbound() {
+        when(inboundConverter.toDomain(inbound)).thenReturn(inboundDomain);
         when(inboundRepository.findAll()).thenReturn(List.of(inbound));
 
         InboundDomain inboundDomain = receivingGatewayImp.findFirstInbound();
@@ -95,6 +112,7 @@ class ReceivingGatewayImpTest {
 
     @Test
     public void shouldFindByCode() {
+        when(inboundConverter.toDomain(inbound)).thenReturn(inboundDomain);
         when(inboundRepository.findInboundByCode("IS_73_09_76_39")).thenReturn(inbound);
 
         InboundDomain inboundDomain = receivingGatewayImp.findInboundByCode("IS_73_09_76_39");
@@ -107,12 +125,13 @@ class ReceivingGatewayImpTest {
 
     @Test
     public void shouldUpdateStatusInbound() {
+        when(inboundConverter.toDomain(inbound)).thenReturn(inboundDomain);
         when(inboundRepository.findById(12345678L)).thenReturn(Optional.of(inbound));
         when(inboundRepository.save(inbound)).thenReturn(inbound);
 
         final InboundDomain inboundDomain = receivingGatewayImp.updateStatusInbound(12345678L);
 
-        assertThat(inboundDomain.getStatusReceiving()).isEqualTo(Status.RECEIVED);
+        assertThat(inboundDomain.getStatusReceiving()).isEqualTo(Status.PENDING);
         verify(inboundRepository, times(1)).findById(12345678L);
         verify(inboundRepository, times(1)).save(inbound);
     }

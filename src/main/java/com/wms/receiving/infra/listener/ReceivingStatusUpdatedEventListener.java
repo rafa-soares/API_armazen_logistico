@@ -1,5 +1,6 @@
 package com.wms.receiving.infra.listener;
 
+import com.wms.receiving.infra.listener.event.InboundReceivedEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -15,9 +16,9 @@ public class ReceivingStatusUpdatedEventListener {
 
     @Async
     @EventListener
-    public void listenen(final String receivingStatus) {
-        log.info("Publishing the event to RabbitMQ receivingStatus={}", receivingStatus);
-        rabbitTemplate.convertAndSend("receiving.exchange", "receiving.key", receivingStatus);
+    public void listenen(final InboundReceivedEvent inboundEvent) {
+        log.info("[listenen] inboundEvent= {}", inboundEvent);
+        rabbitTemplate.convertAndSend("receiving.exchange", "receiving.key", inboundEvent);
         log.info("Event published to RabbitMQ successfully.");
     }
 }

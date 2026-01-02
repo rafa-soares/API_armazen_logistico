@@ -20,12 +20,4 @@ public class ItemRequestDTO {
 
     @NotBlank(message = "O atributo qty não pode ser null ou empty.")
     private Integer qty;
-
-    public static ItemDomain toDomain(final ItemRequestDTO itemRequestDTO) {
-        final ItemDomain itemDomain = new ItemDomain();
-        itemDomain.setDescription(itemRequestDTO.getDescription());
-        itemDomain.setSku(itemRequestDTO.getSku());
-        itemDomain.setQty(itemRequestDTO.getQty());
-        return itemDomain;
-    }
 }
