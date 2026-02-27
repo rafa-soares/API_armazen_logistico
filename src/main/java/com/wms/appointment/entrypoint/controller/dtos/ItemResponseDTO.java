@@ -6,6 +6,6 @@ import lombok.Builder;
 public record ItemResponseDTO(String id,
                               Long quantity,
                               String description,
-                              String sku,
+//                              String sku,
                               String status) {
 }

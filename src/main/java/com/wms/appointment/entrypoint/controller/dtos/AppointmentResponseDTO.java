@@ -8,5 +8,5 @@ import java.util.List;
 public record AppointmentResponseDTO(String id,
                                      String appointmentAt,
                                      SellerResponseDTO seller,
-                                     List<ItemResponseDTO> items) {
+                                     List<InboundResponseDTO> inbounds) {
 }

@@ -16,5 +16,5 @@ public class AppointmentDomain {
 
     private SellerDomain seller;
 
-    private List<ItemDomain> items;
+    private List<InboundDomain> inbounds;
 }

@@ -10,6 +10,6 @@ public record AppointmentRequestDTO(
         String appointmentAt,
         @NotBlank(message = "O id do seller não pode ser null ou empty.")
         String sellerId,
-        @NotEmpty(message = "A lista de itens não pode estar vazia.")
-        List<@NotBlank(message = "O id do item não pode ser null ou empty.") String> items) {
+        @NotEmpty(message = "A lista de inbounds não pode estar vazia.")
+        List<@NotBlank(message = "O id do item não pode ser null ou empty.") String> inbounds) {
 }

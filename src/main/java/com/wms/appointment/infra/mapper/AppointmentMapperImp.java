@@ -1,16 +1,16 @@
 package com.wms.appointment.infra.mapper;
 
 import com.wms.appointment.core.domain.AppointmentDomain;
-import com.wms.appointment.core.domain.ItemDomain;
+import com.wms.appointment.core.domain.InboundDomain;
 import com.wms.appointment.core.domain.SellerDomain;
 import com.wms.appointment.entrypoint.controller.dtos.AppointmentRequestDTO;
 import com.wms.appointment.entrypoint.controller.dtos.AppointmentResponseDTO;
-import com.wms.appointment.entrypoint.controller.dtos.ItemResponseDTO;
+import com.wms.appointment.entrypoint.controller.dtos.InboundResponseDTO;
 import com.wms.appointment.entrypoint.controller.dtos.SellerResponseDTO;
 import com.wms.appointment.infra.model.Appointment;
-import com.wms.appointment.infra.model.Item;
+import com.wms.appointment.infra.model.Inbound;
 import com.wms.appointment.infra.model.Seller;
-import com.wms.appointment.infra.repository.ItemRepository;
+import com.wms.appointment.infra.repository.InboundRepository;
 import com.wms.appointment.infra.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,14 +24,13 @@ import java.util.UUID;
 @Component
 public class AppointmentMapperImp implements AppointmentMapper {
     public final SellerRepository sellerRepository;
-    public final ItemRepository itemRepository;
+    public final InboundRepository inboundRepository;
     public final SellerMapper sellerMapper;
-    public final ItemMapper itemMapper;
     public final InboundMapper inboundMapper;
 
     @Override
-    public AppointmentDomain toDomain(AppointmentRequestDTO appointmentRequest, SellerDomain sellerDomain, List<ItemDomain> itemDomain) {
-        return new AppointmentDomain(null, appointmentRequest.appointmentAt(), sellerDomain, itemDomain);
+    public AppointmentDomain toDomain(AppointmentRequestDTO appointmentRequest, SellerDomain sellerDomain, List<InboundDomain> inboundDomains) {
+        return new AppointmentDomain(null, appointmentRequest.appointmentAt(), sellerDomain, inboundDomains);
     }
 
     @Override
@@ -41,14 +40,11 @@ public class AppointmentMapperImp implements AppointmentMapper {
         final Seller seller = sellerRepository
                 .getReferenceById(UUID.fromString(appointmentDomain.getSeller().getId()));
 
-        final List<Item> items = appointmentDomain.getItems().stream()
-                .map(itemDomain -> {
-                    final Item item = itemRepository.getReferenceById(UUID.fromString(itemDomain.getId()));
-                    return item;
-                })
+        final List<Inbound> inbounds = appointmentDomain.getInbounds().stream()
+                .map(inboundDomain -> inboundRepository.getReferenceById(UUID.fromString(inboundDomain.getId())))
                 .toList();
 
-        return new Appointment(appointmentAt, seller, items);
+        return new Appointment(appointmentAt, seller, inbounds);
     }
 
     @Override
@@ -57,19 +53,21 @@ public class AppointmentMapperImp implements AppointmentMapper {
 
         final SellerDomain sellerDomain = sellerMapper.toDomain(appointment.getSeller());
 
-//        final List<ItemDomain> itemsDomain = itemMapper.toDomain(appointment.getInbound());
+        final List<InboundDomain> inbounds = appointment.getInbound().stream()
+                .map(inbound -> inboundMapper.toDomain(inbound))
+                .toList();
 
-        final
-
-        return new AppointmentDomain(appointment.getId().toString(), appointmentAt, sellerDomain, itemsDomain);
+        return new AppointmentDomain(appointment.getId().toString(), appointmentAt, sellerDomain, inbounds);
     }
 
     @Override
     public AppointmentResponseDTO toResponse(AppointmentDomain appointmentDomain) {
         final SellerResponseDTO sellerResponse = sellerMapper.toResponse(appointmentDomain.getSeller());
 
-        final List<ItemResponseDTO> itemsResponse = itemMapper.toResponse(appointmentDomain.getItems());
+        final List<InboundResponseDTO> inboundsResponse = appointmentDomain.getInbounds().stream()
+                .map(inboundDomain -> inboundMapper.toResponse(inboundDomain))
+                .toList();
 
-        return new AppointmentResponseDTO(appointmentDomain.getId(), appointmentDomain.getAppointmentAt(), sellerResponse, itemsResponse);
+        return new AppointmentResponseDTO(appointmentDomain.getId(), appointmentDomain.getAppointmentAt(), sellerResponse, inboundsResponse);
     }
 }

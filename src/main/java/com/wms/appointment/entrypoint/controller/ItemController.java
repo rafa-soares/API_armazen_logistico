@@ -21,5 +21,4 @@ public class ItemController {
     public ResponseEntity<ItemResponseDTO> createItem(@Valid @RequestBody final ItemRequestDTO itemRequest) {
         return ResponseEntity.ok(createItem.execute(itemRequest));
     }
-
 }

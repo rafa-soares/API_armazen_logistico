@@ -47,7 +47,7 @@ public class ItemGatewayImp implements ItemGateway {
 
         log.info("[findAllById] Items found: {}", items);
 
-        return itemMapper.toDomain(items);
+        return itemMapper.toDomains(items);
     }
 
     private static void validateIds(List<Item> items, List<UUID> uuidList) {

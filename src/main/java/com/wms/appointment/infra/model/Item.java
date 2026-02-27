@@ -24,9 +24,9 @@ public class Item {
     @Column(nullable = false)
     private String description;
 
-    @NotNull
-    @Column(nullable = false)
-    private String sku;
+//    @NotNull
+//    @Column(nullable = false)
+//    private String sku;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
@@ -38,9 +38,8 @@ public class Item {
     protected Item() {
     }
 
-    public Item(Long quantity, String description, String sku) {
+    public Item(Long quantity, String description) {
         this.quantity = quantity;
         this.description = description;
-        this.sku = sku;
     }
 }

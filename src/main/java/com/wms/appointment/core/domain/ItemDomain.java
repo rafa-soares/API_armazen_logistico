@@ -14,7 +14,7 @@ public class ItemDomain {
 
     private String description;
 
-    private String sku;
+//    private String sku;
 
     private String status;
 }
