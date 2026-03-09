@@ -6,8 +6,10 @@ import com.wms.appointment.entrypoint.controller.dtos.ItemRequestDTO;
 import com.wms.appointment.entrypoint.controller.dtos.ItemResponseDTO;
 import com.wms.appointment.infra.mapper.ItemMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class CreateItem {
@@ -16,6 +18,10 @@ public class CreateItem {
 
     public ItemResponseDTO execute(final ItemRequestDTO itemRequest) {
         final ItemDomain itemDomain = itemMapper.toDomain(itemRequest);
-        return itemMapper.toResponse(itemGateway.save(itemDomain));
+
+        final ItemDomain itemResult = itemGateway.save(itemDomain);
+        log.info("[execute] Item save. {}", itemResult);
+
+        return itemMapper.toResponse(itemResult);
     }
 }

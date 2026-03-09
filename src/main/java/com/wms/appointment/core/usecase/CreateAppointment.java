@@ -12,6 +12,7 @@ import com.wms.appointment.infra.mapper.AppointmentMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,13 +25,19 @@ public class CreateAppointment {
     private final InboundGateway inboundGateway;
     private final AppointmentMapper appointmentMapper;
 
+    @Transactional
     public AppointmentResponseDTO execute(final AppointmentRequestDTO appointmentRequest) {
         final SellerDomain sellerDomain = sellerGateway.findById(appointmentRequest.sellerId());
 
         final List<InboundDomain> inboundsDomain = inboundGateway.findAllById(appointmentRequest.inbounds());
 
-        final AppointmentDomain appointmentDomain = appointmentMapper.toDomain(appointmentRequest, sellerDomain, inboundsDomain);
+        final AppointmentDomain appointmentDomain = appointmentMapper.toDomain(appointmentRequest);
+        appointmentDomain.setSeller(sellerDomain);
+        appointmentDomain.setInboundsDomain(inboundsDomain);
 
-        return appointmentMapper.toResponse(appointmentGateway.save(appointmentDomain));
+        final AppointmentDomain appointmentResult = appointmentGateway.save(appointmentDomain);
+        log.info("[execute] Appointment save. {}", appointmentResult);
+
+        return appointmentMapper.toResponse(appointmentResult);
     }
 }

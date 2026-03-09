@@ -3,17 +3,17 @@ package com.wms.appointment.infra.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
 
 import java.util.UUID;
 
-@ToString
 @Getter
 @Entity
 @Table(name = "item")
 public class Item {
     @Id
     @GeneratedValue
+    @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
     @NotNull
@@ -31,6 +31,7 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inbound_id")
     private Inbound inbound;

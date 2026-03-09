@@ -8,10 +8,13 @@ import com.wms.appointment.entrypoint.controller.dtos.InboundRequestDTO;
 import com.wms.appointment.entrypoint.controller.dtos.InboundResponseDTO;
 import com.wms.appointment.infra.mapper.InboundMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class CreateInbound {
@@ -19,11 +22,15 @@ public class CreateInbound {
     public final ItemGateway itemGateway;
     public final InboundMapper inboundMapper;
 
+    @Transactional
     public InboundResponseDTO execute(final InboundRequestDTO inboundRequest) {
         final List<ItemDomain> itemDomain = itemGateway.findAllById(inboundRequest.items());
 
         final InboundDomain inboundDomain = inboundMapper.toDomain(itemDomain);
 
-        return inboundMapper.toResponse(inboundGateway.save(inboundDomain));
+        final InboundDomain inboundResult = inboundGateway.save(inboundDomain);
+        log.info("[execute] Inbound save. {}", inboundResult);
+
+        return inboundMapper.toResponse(inboundResult);
     }
 }

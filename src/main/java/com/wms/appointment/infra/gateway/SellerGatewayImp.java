@@ -24,10 +24,7 @@ public class SellerGatewayImp implements SellerGateway {
         log.info("[save] Saving seller. {}", sellerDomain);
         final Seller seller = sellerMapper.toEntity(sellerDomain);
 
-        final Seller sellerResult = sellerRepository.save(seller);
-        log.info("[save] Seller save. {}", sellerResult);
-
-        return sellerMapper.toDomain(sellerResult);
+        return sellerMapper.toDomain(sellerRepository.save(seller));
     }
 
     @Override

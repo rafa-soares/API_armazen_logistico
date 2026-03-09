@@ -35,21 +35,18 @@ class ItemGatewayImpTest {
     void shouldSaveItem() {
         final Item item = new Item(
                 2L,
-                "Iphone",
-                "1234");
+                "Iphone");
 
         final ItemDomain itemDomainInput = new ItemDomain(
                 null,
                 2L,
                 "Iphone",
-                "1234",
                 null);
 
         final ItemDomain itemDomainOutput = new ItemDomain(
                 "edfa5aa2-9d76-4909-83d5-8a79e90e34cf",
                 2L,
                 "Iphone",
-                "1234",
                 "PENDING");
 
         when(itemRepository.save(item)).thenReturn(item);
@@ -61,7 +58,6 @@ class ItemGatewayImpTest {
         assertThat(itemDomain.getId()).isEqualTo("edfa5aa2-9d76-4909-83d5-8a79e90e34cf");
         assertThat(itemDomain.getQuantity()).isEqualTo(2L);
         assertThat(itemDomain.getDescription()).isEqualTo("Iphone");
-        assertThat(itemDomain.getSku()).isEqualTo("1234");
         assertThat(itemDomain.getStatus()).isEqualTo("PENDING");
         verify(itemMapper, times(1)).toDomain(item);
     }
@@ -78,13 +74,11 @@ class ItemGatewayImpTest {
 
         final Item item1 = new Item(
                 2L,
-                "Iphone",
-                "1234");
+                "Iphone");
 
         final Item item2 = new Item(
                 1L,
-                "Macbook",
-                "5678");
+                "Macbook");
 
         final List<Item> items = List.of(item1, item2);
 
@@ -92,25 +86,24 @@ class ItemGatewayImpTest {
                 "edfa5aa2-9d76-4909-83d5-8a79e90e34cf",
                 2L,
                 "Iphone",
-                "1234",
                 "PENDING");
 
         final ItemDomain itemDomainOutput2 = new ItemDomain(
                 "5d49bbcf-adde-4bd6-9c4b-35a684875142",
                 1L,
                 "Macbook",
-                "5678",
                 "PENDING");
 
         final List<ItemDomain> itemsDomain = List.of(itemDomainOutput1, itemDomainOutput2);
 
         when(itemRepository.findAllById(uuidList)).thenReturn(items);
-        when(itemMapper.toDomain(items)).thenReturn(itemsDomain);
+        when(itemMapper.toDomains(List.of(item1, item2)))
+                .thenReturn(List.of(itemDomainOutput1, itemDomainOutput2));
 
         final List<ItemDomain> itemsDomainResult = itemGatewayImp.findAllById(ids);
 
         assertEquals(itemsDomainResult, itemsDomain);
-        verify(itemMapper, times(1)).toDomain(items);
+        verify(itemRepository, times(1)).findAllById(uuidList);
     }
 
     @Test

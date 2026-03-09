@@ -31,20 +31,17 @@ class CreateItemTest {
                 .id("edfa5aa2-9d76-4909-83d5-8a79e90e34cf")
                 .quantity(2L)
                 .description("Patins")
-                .sku("1234")
                 .status("PENDING")
                 .build();
 
         final ItemRequestDTO itemRequest = new ItemRequestDTO(
                 2L,
-                "Patins",
-                "1234");
+                "Patins");
 
         final ItemDomain itemDomainOutput = new ItemDomain(
                 "edfa5aa2-9d76-4909-83d5-8a79e90e34cf",
                 2L,
                 "Patins",
-                "1234",
                 "PENDING");
 
 
@@ -52,7 +49,6 @@ class CreateItemTest {
                 null,
                 2L,
                 "Patins",
-                "1234",
                 null);
 
         when(itemGateway.save(itemDomainInput)).thenReturn(itemDomainOutput);
@@ -64,7 +60,6 @@ class CreateItemTest {
         assertThat(itemResponseResult.id()).isEqualTo("edfa5aa2-9d76-4909-83d5-8a79e90e34cf");
         assertThat(itemResponseResult.quantity()).isEqualTo(2L);
         assertThat(itemResponseResult.description()).isEqualTo("Patins");
-        assertThat(itemResponseResult.sku()).isEqualTo("1234");
         assertThat(itemResponseResult.status()).isEqualTo("PENDING");
         verify(itemMapper, times(1)).toResponse(itemDomainOutput);
     }

@@ -3,19 +3,18 @@ package com.wms.appointment.infra.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@ToString
 @Getter
 @Entity
 @Table(name = "appointment")
 public class Appointment {
     @Id
     @GeneratedValue
+    @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
     @NotNull
@@ -26,15 +25,16 @@ public class Appointment {
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
 
-    @OneToMany(mappedBy = "appointment")
-    private List<Inbound> inbound;
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
+    private List<Inbound> inbounds;
 
     protected Appointment() {
     }
 
-    public Appointment(LocalDateTime appointmentAt, Seller seller, List<Inbound> inbound) {
+    public Appointment(LocalDateTime appointmentAt, Seller seller, List<Inbound> inbounds) {
         this.appointmentAt = appointmentAt;
         this.seller = seller;
-        this.inbound = inbound;
+        this.inbounds = inbounds;
+        inbounds.forEach(inbound -> inbound.setAppointment(this));
     }
 }

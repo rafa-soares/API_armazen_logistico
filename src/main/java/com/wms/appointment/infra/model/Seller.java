@@ -3,11 +3,9 @@ package com.wms.appointment.infra.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.util.UUID;
 
-@ToString
 @Getter
 @Entity
 @Table(name = "seller")

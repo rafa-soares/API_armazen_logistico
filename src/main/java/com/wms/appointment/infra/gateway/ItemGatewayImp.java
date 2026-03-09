@@ -27,10 +27,7 @@ public class ItemGatewayImp implements ItemGateway {
         log.info("[save] Saving item. {}", itemDomain);
         final Item item = itemMapper.toEntity(itemDomain);
 
-        final Item itemResult = itemRepository.save(item);
-        log.info("[save] Item save. {}", itemResult);
-
-        return itemMapper.toDomain(itemResult);
+        return itemMapper.toDomain(itemRepository.save(item));
     }
 
     @Override

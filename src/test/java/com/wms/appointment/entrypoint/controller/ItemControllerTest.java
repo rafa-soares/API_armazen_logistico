@@ -26,8 +26,7 @@ class ItemControllerTest {
     public void shouldCreateItem() {
         final ItemRequestDTO itemRequest = new ItemRequestDTO(
                 2L,
-                "Patins",
-                "1234");
+                "Patins");
 
         final ResponseEntity<ItemResponseDTO> response = template.postForEntity(
                 "/item",
@@ -39,14 +38,12 @@ class ItemControllerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "2, Macbook, ''",
-            "2, ' ', '1234'",
-            " , Macbook, '1234'"})
-    void shouldReturnBadRequestWhenQuantityOrDescriptionOrSkuIsInvalid(final Long quantity, final String description, final String sku) {
+            "2, ' '",
+            " , Macbook"})
+    public void shouldReturnBadRequestWhenQuantityOrDescriptionOrSkuIsInvalid(final Long quantity, final String description) {
         final ItemRequestDTO itemRequest = new ItemRequestDTO(
                 quantity,
-                description,
-                sku);
+                description);
 
         final ResponseEntity<ItemResponseDTO> response = template.postForEntity(
                 "/item",
