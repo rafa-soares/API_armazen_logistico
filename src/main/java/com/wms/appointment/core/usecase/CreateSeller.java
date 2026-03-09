@@ -6,8 +6,10 @@ import com.wms.appointment.entrypoint.controller.dtos.SellerRequestDTO;
 import com.wms.appointment.entrypoint.controller.dtos.SellerResponseDTO;
 import com.wms.appointment.infra.mapper.SellerMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CreateSeller {
@@ -16,6 +18,10 @@ public class CreateSeller {
 
     public SellerResponseDTO execute(final SellerRequestDTO sellerRequest) {
         final SellerDomain sellerDomain = sellerMapper.toDomain(sellerRequest);
-        return sellerMapper.toResponse(sellerGateway.save(sellerDomain));
+
+        final SellerDomain sellerResult = sellerGateway.save(sellerDomain);
+        log.info("[execute] Seller save. {}", sellerResult);
+
+        return sellerMapper.toResponse(sellerResult);
     }
 }

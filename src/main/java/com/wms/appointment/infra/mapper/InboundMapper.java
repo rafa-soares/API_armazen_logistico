@@ -2,22 +2,20 @@ package com.wms.appointment.infra.mapper;
 
 import com.wms.appointment.core.domain.InboundDomain;
 import com.wms.appointment.core.domain.ItemDomain;
-import com.wms.appointment.entrypoint.controller.dtos.InboundRequestDTO;
 import com.wms.appointment.entrypoint.controller.dtos.InboundResponseDTO;
 import com.wms.appointment.infra.model.Inbound;
+import com.wms.appointment.infra.model.Item;
 
 import java.util.List;
 
 public interface InboundMapper {
-    InboundDomain toDomain(InboundRequestDTO inboundRequest);
+    InboundDomain toDomain(List<ItemDomain> itemDomain);
 
-    Inbound toEntity(InboundDomain inboundDomain);
+    Inbound toEntity(List<Item> items);
 
     InboundDomain toDomain(Inbound inbound);
 
     InboundResponseDTO toResponse(InboundDomain inboundDomain);
 
-//    List<InboundDomain> toDomains(List<Inbound> inbounds);
-
-    InboundDomain toDomain(List<ItemDomain> itemDomain);
+    Inbound toEntity(InboundDomain inboundDomain);
 }

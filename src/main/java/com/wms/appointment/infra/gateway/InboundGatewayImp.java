@@ -5,7 +5,9 @@ import com.wms.appointment.core.exceptions.InboundNotFoundException;
 import com.wms.appointment.core.gateway.InboundGateway;
 import com.wms.appointment.infra.mapper.InboundMapper;
 import com.wms.appointment.infra.model.Inbound;
+import com.wms.appointment.infra.model.Item;
 import com.wms.appointment.infra.repository.InboundRepository;
+import com.wms.appointment.infra.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,15 +22,20 @@ import java.util.stream.Collectors;
 @Component
 public class InboundGatewayImp implements InboundGateway {
     public final InboundRepository inboundRepository;
+    public final ItemRepository itemRepository;
     public final InboundMapper inboundMapper;
 
     @Override
     public InboundDomain save(InboundDomain inboundDomain) {
         log.info("[save] Saving inbound. {}", inboundDomain);
-        final Inbound inbound = inboundMapper.toEntity(inboundDomain);
+        final List<Item> items = inboundDomain.getItems().stream()
+                .map(itemDomain -> itemRepository.getReferenceById(
+                        UUID.fromString(itemDomain.getId())))
+                .toList();
+
+        final Inbound inbound = inboundMapper.toEntity(items);
 
         final Inbound inboundResult = inboundRepository.save(inbound);
-        log.info("[save] Inbound save. {}", inboundResult);
 
         return inboundMapper.toDomain(inboundResult);
     }
