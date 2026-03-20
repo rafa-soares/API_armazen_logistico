@@ -19,9 +19,10 @@ public class Inbound {
     @Column(length = 36)
     private UUID id;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private StatusInbound status = StatusInbound.SCHEDULED;
+    private StatusInbound status = StatusInbound.PENDING_SCHEDULING;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,7 +32,7 @@ public class Inbound {
     @OneToMany(mappedBy = "inbound", cascade = CascadeType.ALL)
     private List<Item> items;
 
-    protected Inbound() {
+    public Inbound() {
     }
 
     public Inbound(final List<Item> items) {

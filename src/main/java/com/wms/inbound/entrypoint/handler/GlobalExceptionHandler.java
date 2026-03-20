@@ -1,5 +1,7 @@
 package com.wms.inbound.entrypoint.handler;
 
+import com.wms.inbound.core.exceptions.InboundAlreadyReceivedException;
+import com.wms.inbound.core.exceptions.InvalidInboundStatusException;
 import com.wms.inbound.core.exceptions.ItemNotFoundException;
 import com.wms.inbound.core.exceptions.SellerNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,6 +67,38 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(InboundAlreadyReceivedException.class)
+    public ResponseEntity<ErrorResponse> inboundAlreadyReceivedException(
+            final InboundAlreadyReceivedException exception,
+            final HttpServletRequest request) {
+
+        final ErrorResponse error = new ErrorResponse();
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setError(HttpStatus.CONFLICT.getReasonPhrase());
+        error.setMessage(exception.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
+    @ExceptionHandler(InvalidInboundStatusException.class)
+    public ResponseEntity<ErrorResponse> invalidInboundStatusException(
+            final InvalidInboundStatusException exception,
+            final HttpServletRequest request) {
+
+        final ErrorResponse error = new ErrorResponse();
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setError(HttpStatus.CONFLICT.getReasonPhrase());
+        error.setMessage(exception.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(error);
     }
 }

@@ -8,4 +8,6 @@ public interface InboundGateway {
     InboundDomain save(final InboundDomain inboundDomain);
 
     List<InboundDomain> findAllById(List<String> ids);
+
+    InboundDomain findById(String inboundId);
 }

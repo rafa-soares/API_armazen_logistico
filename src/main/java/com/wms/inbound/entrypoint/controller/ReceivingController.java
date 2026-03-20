@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping
+@RequestMapping("/receiving")
 public class ReceivingController {
     private final InboundReceivingStatusUpdate inboundReceivingStatusUpdate;
 
     @PutMapping("/beep-inbound/{id}")
-    public ResponseEntity<InboundResponseDTO> beepInbound(@PathVariable String id) {
+    public ResponseEntity<InboundResponseDTO> beepInbound(@PathVariable final String id) {
         log.info("[beepInbound] Inbound receiving beep.");
         return ResponseEntity.ok(inboundReceivingStatusUpdate.execute(id));
     }

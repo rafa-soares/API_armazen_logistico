@@ -57,6 +57,17 @@ public class InboundGatewayImp implements InboundGateway {
         return inboundsDomain;
     }
 
+    @Override
+    public InboundDomain findById(String inboundId) {
+        final UUID uuid = UUID.fromString(inboundId);
+
+        final Inbound inbound = inboundRepository.findById(uuid)
+                .orElseThrow(() -> new InboundNotFoundException(uuid));
+
+        return inboundMapper.toDomain(inbound);
+    }
+
+
     private static void validateIds(List<Inbound> inbounds, List<UUID> uuidList) {
         if (inbounds.size() != uuidList.size()) {
 

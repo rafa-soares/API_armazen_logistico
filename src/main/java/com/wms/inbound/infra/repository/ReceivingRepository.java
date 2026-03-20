@@ -17,18 +17,11 @@ public interface ReceivingRepository extends JpaRepository<Inbound, UUID> {
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("""
-       update Inbound i
-       set i.status = :status
-       where i.id = :inboundId
-       """)
-    void updateStatus(@Param("inboundId") UUID inboundId,
-                     @Param("status") StatusInbound status);
-
-//    @Query("""
-//            SELECT i
-//            FROM Inbound i
-//            JOIN FETCH i.items
-//            WHERE i.id = :id
-//            """)
-//    Optional<Inbound> findByIdWithItems(UUID id);
+            update Inbound i
+            set i.status = :status
+            where i.id = :inboundId
+            and i.status = 'SCHEDULED'
+            """)
+    int updateStatus(@Param("inboundId") UUID inboundId,
+                      @Param("status") StatusInbound status);
 }

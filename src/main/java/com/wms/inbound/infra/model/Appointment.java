@@ -38,6 +38,9 @@ public class Appointment {
         this.appointmentAt = appointmentAt;
         this.seller = seller;
         this.inbounds = inbounds;
-        inbounds.forEach(inbound -> inbound.setAppointment(this));
+        inbounds.forEach(inbound -> {
+            inbound.setAppointment(this);
+            inbound.setStatus(StatusInbound.SCHEDULED);
+        });
     }
 }

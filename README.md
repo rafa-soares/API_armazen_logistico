@@ -13,14 +13,14 @@ O fluxo de Inbound (entrada de mercadorias), que será automatizado pelo sistema
 
 ### 📌 Appointment (Agendamento das mercadorias)
 
-### 🚚 Receiving (Recebimento da mercadorias na doca)
+### 🚚 Receiving (Recebimento da mercadorias no armazém)
 
 ### 📦 Checking (Conferência do itens)
 
 ---
 ## 🏛️ Arquitetura
 
-Cada aplicação do Projeto Inbound está organizada em três camadas distintas, seguindo os princípios de **Arquitetura Hexagonal** (Ports and Adapters) e **Clean Architecture**, garantindo separação de responsabilidades, testabilidade e independência de frameworks.
+A aplicação wms-inbound está organizada em três camadas distintas, seguindo os princípios de **Arquitetura Hexagonal** (Ports and Adapters) e **Clean Architecture**, garantindo separação de responsabilidades, testabilidade e independência de frameworks.
 
 Nesse modelo de arquitetura as dependências apontam para dentro, em direção ao núcleo da aplicação, preservando o domínio das regras de negócio e evitando acoplamento com detalhes externos como frameworks, banco de dados ou interfaces.
 ```
