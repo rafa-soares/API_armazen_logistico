@@ -1,6 +1,7 @@
 package com.wms.inbound.infra.gateway;
 
 import com.wms.inbound.core.domain.AppointmentDomain;
+import com.wms.inbound.core.exceptions.AppointmentNotFoundException;
 import com.wms.inbound.core.gateway.AppointmentGateway;
 import com.wms.inbound.infra.mapper.AppointmentMapper;
 import com.wms.inbound.infra.model.Appointment;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -43,5 +45,16 @@ public class AppointmentGatewayImp implements AppointmentGateway {
         final Appointment appointmentResult = appointmentRepository.save(appointment);
 
         return appointmentMapper.toDomain(appointmentResult);
+    }
+
+    @Override
+    public AppointmentDomain findById(String appointmentId) {
+        final UUID id = UUID.fromString(appointmentId);
+
+        final Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new AppointmentNotFoundException(id));
+        log.info("[findById] Returned appointment: {}", appointment);
+
+        return appointmentMapper.toDomain(appointment);
     }
 }

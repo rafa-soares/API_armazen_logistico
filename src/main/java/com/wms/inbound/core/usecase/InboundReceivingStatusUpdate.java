@@ -18,6 +18,7 @@ public class InboundReceivingStatusUpdate {
 
     @Transactional
     public InboundResponseDTO execute(final String inboundId) {
+        log.info("[execute] Updating status inbound= {}", inboundId);
         receivedGateway.updateStatusInbound(inboundId);
 
         final InboundDomain inboundReturn = inboundGateway.findById(inboundId);

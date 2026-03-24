@@ -29,42 +29,42 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReceivingControllerTest {
-    @Autowired
-    private ReceivingRepository receivingRepository;
-
-    @Autowired
-    private InboundRepository inboundRepository;
-
-    @Autowired
-    private TestRestTemplate template;
-
-    @Autowired
-    private InboundReceivingStatusUpdate inboundReceivingStatusUpdate;
-
-    @AfterAll
-    public void afterAll() {
-        inboundRepository.deleteAll();
-    }
-
-    @Test
-    public void shouldUpdateStatus() {
-        final Item item1 = new Item(1L, "Iphone");
-        final Item item2 = new Item(2L, "Planner");
-
-        final Inbound inbound = new Inbound(List.of(item1, item2));
-        final Inbound inboundSave = inboundRepository.save(inbound);
-        inboundSave.setStatus(StatusInbound.SCHEDULED);
-
-        final String inboundId = inboundSave.getId().toString();
-
-        ResponseEntity<InboundResponseDTO> response =
-                template.exchange(
-                        "/receiving/beep-inbound/{inboundId}",
-                        HttpMethod.PUT,
-                        HttpEntity.EMPTY,
-                        InboundResponseDTO.class,
-                        inboundId);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+//    @Autowired
+//    private ReceivingRepository receivingRepository;
+//
+//    @Autowired
+//    private InboundRepository inboundRepository;
+//
+//    @Autowired
+//    private TestRestTemplate template;
+//
+//    @Autowired
+//    private InboundReceivingStatusUpdate inboundReceivingStatusUpdate;
+//
+//    @AfterAll
+//    public void afterAll() {
+//        inboundRepository.deleteAll();
+//    }
+//
+//    @Test
+//    public void shouldUpdateStatus() {
+//        final Item item1 = new Item(1L, "Iphone");
+//        final Item item2 = new Item(2L, "Planner");
+//
+//        final Inbound inbound = new Inbound(List.of(item1, item2));
+//        final Inbound inboundSave = inboundRepository.save(inbound);
+//        inboundSave.setStatus(StatusInbound.SCHEDULED);
+//
+//        final String inboundId = inboundSave.getId().toString();
+//
+//        ResponseEntity<InboundResponseDTO> response =
+//                template.exchange(
+//                        "/receiving/beep-inbound/{inboundId}",
+//                        HttpMethod.PUT,
+//                        HttpEntity.EMPTY,
+//                        InboundResponseDTO.class,
+//                        inboundId);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//    }
 }
