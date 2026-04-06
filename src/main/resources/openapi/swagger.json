@@ -1,0 +1,324 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/receiving/beep-inbound/{id}": {
+      "put": {
+        "tags": [
+          "receiving-controller"
+        ],
+        "operationId": "beepInbound",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InboundResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seller": {
+      "post": {
+        "tags": [
+          "seller-controller"
+        ],
+        "operationId": "createSeller",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SellerRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SellerResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/item": {
+      "post": {
+        "tags": [
+          "item-controller"
+        ],
+        "operationId": "createItem",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbound": {
+      "post": {
+        "tags": [
+          "inbound-controller"
+        ],
+        "operationId": "createInbound",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/InboundResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment": {
+      "post": {
+        "tags": [
+          "appointment-controller"
+        ],
+        "operationId": "createAppointment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/receiving/print/{appointmentId}": {
+      "get": {
+        "tags": [
+          "receiving-controller"
+        ],
+        "operationId": "print",
+        "parameters": [
+          {
+            "name": "appointmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InboundResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemResponseDTO"
+            }
+          }
+        }
+      },
+      "ItemResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "SellerRequestDTO": {
+        "required": [
+          "cnpj",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "cnpj": {
+            "type": "string"
+          }
+        }
+      },
+      "SellerResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cnpj": {
+            "type": "string"
+          }
+        }
+      },
+      "ItemRequestDTO": {
+        "required": [
+          "description",
+          "quantity"
+        ],
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "InboundRequestDTO": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AppointmentRequestDTO": {
+        "required": [
+          "appointmentAt",
+          "inbounds",
+          "sellerId"
+        ],
+        "type": "object",
+        "properties": {
+          "appointmentAt": {
+            "type": "string"
+          },
+          "sellerId": {
+            "type": "string"
+          },
+          "inbounds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AppointmentResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "appointmentAt": {
+            "type": "string"
+          },
+          "seller": {
+            "$ref": "#/components/schemas/SellerResponseDTO"
+          },
+          "inbounds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InboundResponseDTO"
+            }
+          }
+        }
+      }
+    }
+  }
+}
