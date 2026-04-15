@@ -7,7 +7,11 @@
   "servers": [
     {
       "url": "http://localhost:8080",
-      "description": "Generated server url"
+      "description": "Local"
+    },
+    {
+      "url": "https://mock.apidog.com/m1/1249373-1246470-1189179",
+      "description": "Mock"
     }
   ],
   "paths": {
